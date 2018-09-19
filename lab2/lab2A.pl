@@ -14,9 +14,9 @@ min_elem([X, Y|T], M) :- Y >= X, min_elem([X|T],M).
 rm_elem(Elem, [Elem|T], T).
 rm_elem(Elem, [Head|T1], [Head|T2]) :- rm_elem(Elem, T1, T2). 
 
-% ssort/2, selection sort (funkar inte)
-ssort(L,L) :- issorted(L).
-ssort(L,[M|T]) :- 
-    min_elem(L,M),
-    rm_elem(M, L, T), 
-    ssort(T,[M|T]). 
+% ssort/2, selection sort 
+ssort([],[]).
+ssort([H|T],[M|R]) :- 
+    min_elem([H|T],M),
+    rm_elem(M, [H|T], N),
+    ssort(N,R).

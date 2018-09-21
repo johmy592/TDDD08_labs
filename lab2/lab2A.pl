@@ -20,3 +20,23 @@ ssort([H|T],[M|R]) :-
     min_elem([H|T],M),
     rm_elem(M, [H|T], N),
     ssort(N,R).
+
+%---- Partition list into smaller or bigger than element -----
+partition([], _, [], []). % Base condition, if the list is empty, we get 2 empty lists.
+
+partition([Head|Tail], N, [Head|Left], Right) :-
+    Head =< N,
+    partition(Tail, N, Left, Right).
+
+partition([Head|Tail], N, Left, [Head|Right]) :-
+    Head > N,
+    partition(Tail, N, Left, Right).
+
+
+%------ qsort/2, Quicksort ------------
+qsort([],[]).
+qsort([Head|Tail], Ls) :-
+    partition(Tail, Head, Left, Right),% Partition into 2 lists with smaller and bigger elements.
+    qsort(Left, Lls), % Quicksort left side.
+    qsort(Right, Lrs), % Quicksort right side.
+    append(Lls, [Head|Lrs], Ls). % Concatinate both List partitions. And add pivot-element "head" again.

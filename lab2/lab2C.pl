@@ -36,7 +36,15 @@ eval(Env, X1 / Y1, Res) :-
     eval(Env, Y1, Y2),
     Res is X2 / Y2.
 
+% Boolean evaluation
+eval_bool(_, tt, tt).
+eval_bool(_, ff, ff).
 
+eval_bool(Env, X1 > Y1, Res) :-
+    eval(Env, X1, X2),
+    eval(Env, Y1, Y2),
+    Res = (X2 > Y2).
+    
 
 % update_env(Env0, I, Replacement, Env)
 update_env([(I,_)|Tail], I, Replacement, [(I, Replacement)|Tail]).

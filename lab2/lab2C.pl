@@ -13,27 +13,27 @@ execute(Env0, set(I, Val), Env) :-
 
     
 % Arithmetic operations
-eval(Env, id(I), Val) :- member((I,Val), Env).
-eval(_, num(N), N).
+eval_arithmetic(Env, id(I), Val) :- member((I,Val), Env).
+eval_arithmetic(_, num(N), N).
 
-eval(Env, X1 + Y1, Res) :-
-    eval(Env, X1, X2),
-    eval(Env, Y1, Y2),
+eval_arithmetic(Env, X1 + Y1, Res) :-
+    eval_arithmetic(Env, X1, X2),
+    eval_arithmetic(Env, Y1, Y2),
     Res is X2 + Y2.
 
-eval(Env, X1 - Y1, Res) :-
-    eval(Env, X1, X2),
-    eval(Env, Y1, Y2),
+eval_arithmetic(Env, X1 - Y1, Res) :-
+    eval_arithmetic(Env, X1, X2),
+    eval_arithmetic(Env, Y1, Y2),
     Res is X2 - Y2.
 
-eval(Env, X1 * Y1, Res) :-
-    eval(Env, X1, X2),
-    eval(Env, Y1, Y2),
+eval_arithmetic(Env, X1 * Y1, Res) :-
+    eval_arithmetic(Env, X1, X2),
+    eval_arithmetic(Env, Y1, Y2),
     Res is X2 * Y2.
 
-eval(Env, X1 / Y1, Res) :-
-    eval(Env, X1, X2),
-    eval(Env, Y1, Y2),
+eval_arithmetic(Env, X1 / Y1, Res) :-
+    eval_arithmetic(Env, X1, X2),
+    eval_arithmetic(Env, Y1, Y2),
     Res is X2 / Y2.
 
 % Boolean evaluation
@@ -41,8 +41,8 @@ eval_bool(_, tt, tt).
 eval_bool(_, ff, ff).
 
 eval_bool(Env, X1 > Y1, Res) :-
-    eval(Env, X1, X2),
-    eval(Env, Y1, Y2),
+    eval_arithmetic(Env, X1, X2),
+    eval_arithmetic(Env, Y1, Y2),
     Res = (X2 > Y2).
     
 

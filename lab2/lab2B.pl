@@ -22,6 +22,7 @@ middle(X, [First|Xs]) :-
 % X = [_3412, a, _3418] ;
 % X = [_3412, _3424, a, _3448, _3418] ;
 % X = [_3412, _3424, _3436, a, _3460, _3472, _3418] 
+% 
 %----------------------------------
 
 % middle(X, [X]).
@@ -68,3 +69,14 @@ middle(X, [First|Xs]) :-
 
 % ?- middle(a, X).
 % inf. loop
+%----------------------------------------------------
+% For the first type of query, the first and third orderings
+% are essentialy equal. The second ordering is not good since
+% it will keep searching deeper into the middle(X, Middle) clause
+% for another solution after finding the first.
+
+% For the second type of query the first and second orderings are
+% essentially equal. The last two orderings are not good since they
+% miss the most basic solution middle(X,[X]). This is because
+% it will keep finding viable solutions in the middle(X, [First|Xs])
+% clause that is above.

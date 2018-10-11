@@ -88,11 +88,51 @@ check_state([[Ml,Cl],_,[Mr,Cr]]):-
 %-----------------------------------------------------------
 
 % Breadth first search
-bfs(Goal,Goal).
 
-bfs(In,Goal) :-
-    findall(X,children(In,X),
-    bfs(Child,Goal). 
+bfs(In, Goal) :-
+    bfs_help([In],[],Goal).        
+
+bfs_help([Goal|_],_,Goal) :-
+    print(Goal).
+
+bfs_help([Q1|Tail],Visited, Goal) :- 
+    findall(X, (children(Q1,X),check_visited(Visited,X)),Tmp),
+    append(Tail,Tmp,New_Queue),
+    print(Q1),print('--->'), 
+    append(Visited,[Q1],New_Visited),
+    bfs_help(New_Queue,New_Visited,Goal).
+    
+    
+    
 
 
+% Depth first search
+
+dfs(In,Goal) :-
+    dfs_help(In,[],Goal). 
+
+dfs_help(Goal,Visited,Goal) :-
+    append(Visited,[Goal],New),
+    print_elements(New).
+
+dfs_help(In,Visited,Goal) :-
+    check_visited(Visited,In),
+    append(Visited,[In],New_Visited),
+    children(In,Child),
+    dfs_help(Child,New_Visited,Goal).
+    
+check_visited([],_).
+check_visited([HeadState|Rest],State) :-
+    not(HeadState = State),
+    check_visited(Rest,State).
+
+% Printing the states
+print_elements([]).
+print_elements([X]) :-
+    print(X).
+print_elements([H|T]) :-
+    not(T = []),
+    print(H),
+    print('-->'),
+    print_elements(T).
 

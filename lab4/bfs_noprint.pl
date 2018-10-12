@@ -88,48 +88,23 @@ check_state([[Ml,Cl],_,[Mr,Cr]]):-
 %-----------------------------------------------------------
 
 % Breadth first search
-
 bfs(In, Goal) :-
-    bfs_help([In],[],[[In]],Goal).        
+    bfs_help([In],[],Goal).        
 
-bfs_help([Goal|_],_,_,Goal) :-
+% bfs(Queue,Visited,Goal)
+% In each step: check if first element of Queue is Goal,
+% if not, push all children of first element that have not
+% already been processed to back of Queue and continue with
+% rest of Queue.
+bfs_help([Goal|_],_,Goal):-
     print('Found Goal: '),print(Goal).
 
-bfs_help([Q1|Tail],Visited,Paths,Goal) :- 
+bfs_help([Q1|Tail],Visited,Goal) :- 
     print(Q1),print('---->'),
     findall(X, (children(Q1,X),check_visited(Visited,X)),Tmp),
-    append(Tail,Tmp,New_Queue),
-    %print('Paths: '),print(Paths), print('Tmp: '),print(Tmp),nl,
-    %expand_path(Q1,Tmp,Paths,NewPaths),
-    %print(NewPaths),print('----'),nl,
+    append(Tail,Tmp,New_Queue), 
     append(Visited,[Q1],New_Visited),
-    %print('Heej'),
-    bfs_help(New_Queue,New_Visited,Paths,Goal).
-
-% For keeping track of path for printing purposes
-
-% expand_path(Current,Children,Path,Res)
-expand_path(_,[],_,[]).
-
-expand_path(Current,[C1|T1],Paths,NewPaths) :-
-    %print('Current: '),print(Current),print('C1: '),print(C1),print(' T1: '),print(T1),print(' paths '),print(Paths),nl, 
-    expand_one(Current,C1,Paths,Res),
-    %append([Tmp|T],[],[Res1]),
-    append(Res,T2,NewPaths),
-    expand_path(Current,T1,Paths,T2).
-
-
-% expand_one(Current,Child,Paths,Res)
-expand_one(_,_,[],[]).
-
-expand_one(Current,Child,[[Current|T1]|T2],[[Child,Current|T1]|T3]):-
-    %append([Child,Current|T1],Res,NewRes),
-    expand_one(Current,Child,T2,T3).
-        
-expand_one(Current,Child,[[H|T1]|T2],[[H|T1]|T3]) :-
-    not(Current = H),
-    expand_one(Current,Child,T2,T3). 
-
+    bfs_help(New_Queue,New_Visited,Goal).
 
 % Depth first search
 
@@ -146,6 +121,7 @@ dfs_help(In,Visited,Goal) :-
     children(In,Child),
     dfs_help(Child,New_Visited,Goal).
     
+% Check if State has already been visited
 check_visited([],_).
 check_visited([HeadState|Rest],State) :-
     not(HeadState = State),
@@ -161,3 +137,17 @@ print_elements([H|T]) :-
     print('-->'),
     print_elements(T).
 
+% Example for depth-first-search (Prints solutions as possible sequences of states to reach goal):
+% ?- dfs([[3,3],0,[0,0]],[[0,0],1,[3,3]]).
+% [[3,3],0,[0,0]]-->[[2,2],1,[1,1]]-->[[3,2],0,[0,1]]-->[[3,0],1,[0,3]]-->[[3,1],0,[0,2]]-->[[1,1],1,[2,2]]-->[[2,2],0,[1,1]]-->[[0,2],1,[3,1]]-->[[0,3],0,[3,0]]-->[[0,1],1,[3,2]]-->[[1,1],0,[2,2]]-->[[0,0],1,[3,3]]
+%
+% [[3,3],0,[0,0]]-->[[2,2],1,[1,1]]-->[[3,2],0,[0,1]]-->[[3,0],1,[0,3]]-->[[3,1],0,[0,2]]-->[[1,1],1,[2,2]]-->[[2,2],0,[1,1]]-->[[0,2],1,[3,1]]-->[[0,3],0,[3,0]]-->[[0,1],1,[3,2]]-->[[1,1],0,[2,2]]-->[[0,0],1,[3,3]]-->[[0,2],0,[3,1]]-->[[0,0],1,[3,3]]
+%
+% [[3,3],0,[0,0]]-->[[2,2],1,[1,1]]-->[[3,2],0,[0,1]]-->[[3,0],1,[0,3]]-->[[3,1],0,[0,2]]-->[[1,1],1,[2,2]]-->[[2,2],0,[1,1]]-->[[0,2],1,[3,1]]-->[[0,3],0,[3,0]]-->[[0,1],1,[3,2]]-->[[1,1],0,[2,2]]-->[[0,0],1,[3,3]]-->[[0,2],0,[3,1]]-->[[0,0],1,[3,3]]
+% 
+% .......
+% ###########################################################################
+
+% Example breadth-first-search (shows which order states are explored in the search):
+% ?- bfs([[3,3],0,[0,0]],[[0,0],1,[3,3]]). 
+%[[3,3],0,[0,0]]---->[[2,2],1,[1,1]]---->[[3,1],1,[0,2]]---->[[3,2],1,[0,1]]---->[[3,2],0,[0,1]]---->[[3,2],0,[0,1]]---->[[3,0],1,[0,3]]---->[[3,0],1,[0,3]]---->[[3,1],0,[0,2]]---->[[3,1],0,[0,2]]---->[[1,1],1,[2,2]]---->[[1,1],1,[2,2]]---->[[2,2],0,[1,1]]---->[[2,2],0,[1,1]]---->[[0,2],1,[3,1]]---->[[0,2],1,[3,1]]---->[[0,3],0,[3,0]]---->[[0,3],0,[3,0]]---->[[0,1],1,[3,2]]---->[[0,1],1,[3,2]]---->[[1,1],0,[2,2]]---->[[0,2],0,[3,1]]---->[[1,1],0,[2,2]]---->[[0,2],0,[3,1]]---->'Found Goal: '[[0,0],1,[3,3]]

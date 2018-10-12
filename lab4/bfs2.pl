@@ -1,5 +1,5 @@
 % Lab4
-
+:- set_prolog_flag(answer_write_options,[max_depth(0)]).
 % Move one of each to right
 children([[Ml,Cl],Bs,[Mr,Cr]], [[Mla,Cla],Bsa,[Mra,Cra]]) :-
     Mla is Ml-1,
@@ -90,20 +90,37 @@ check_state([[Ml,Cl],_,[Mr,Cr]]):-
 % Breadth first search
 
 bfs(In, Goal) :-
-    bfs_help([In],[],Goal).        
+    bfs_help([In],[],[],Goal).        
 
 bfs_help([Goal|_],_,Goal) :-
     print(Goal).
 
-bfs_help([Q1|Tail],Visited, Goal) :- 
+bfs_help([Q1|Tail],Visited,Paths,Goal) :- 
     findall(X, (children(Q1,X),check_visited(Visited,X)),Tmp),
     append(Tail,Tmp,New_Queue),
     print(Q1),print('--->'), 
     append(Visited,[Q1],New_Visited),
     bfs_help(New_Queue,New_Visited,Goal).
-    
-    
-    
+
+% For keeping track of path for printing purposes
+
+% expand_path(Current,Children,Path,Res)
+expand_path(_,[],_,[]).
+
+expand_path(Current,[C1|T1],Paths,[Res1|T2]) :-
+    expand_one(Current,C1,Paths,[Res1]),
+    expand_path(Current,T1,Paths,T2).
+
+% expand_one(Current,Child,Paths,Res)
+expand_one(_,_,[],[]).
+
+expand_one(Current,Child,[[Current|T1]|T2],[[Child,Current|T1]|T3]):-
+    %append([Child,Current|T1],Res,NewRes),
+    expand_one(Current,Child,T2,T3).
+        
+expand_one(Current,Child,[[H|T1]|T2],[[H|T1]|T3]) :-
+    not(Current = H),
+    expand_one(Current,Child,T2,T3). 
 
 
 % Depth first search

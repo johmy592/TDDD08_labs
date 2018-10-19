@@ -42,3 +42,16 @@ set_intersect([H1|T1], [H2|T2], Res) :-
 p_set(Set, Res) :-
     findall(X, set_union(Set, X, Set), Res).
 
+% Körexempel:
+%
+% ?- set_union([a,b,c,e],[a,f,g],Res).
+% Res = [a, b, c, e, f, g] ;
+% false.
+
+% ?- set_intersect([a,b,d,f],[a,d,g],Res).
+% Res = [a, d] ;
+% false.
+
+% ?- p_set([a,b,c],Res).
+% Res = [[], [a], [a, b], [a, b, c], [a, c], [b], [b, c], [c]].
+

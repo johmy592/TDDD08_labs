@@ -48,3 +48,28 @@ qsort([Head|Tail], Ls) :-
     qsort(Left, Lls),
     qsort(Right, Lrs),
     append(Lls, [Head|Lrs], Ls).
+
+% Körexempel:
+% ?- ssort([2,4,1,6,3],Res).
+% Res = [1, 2, 3, 4, 6] ;
+% false.
+%
+% ?- ssort([1,4,2,3,2,2],Res).
+% Res = [1, 2, 2, 2, 3, 4] .
+
+% ?- qsort([1,3,2,9,3],Res).
+% Res = [1, 2, 3, 3, 9] ;
+% false.
+
+% ?- qsort([6,3,4,2,2,2,2],Res).
+% Res = [2, 2, 2, 2, 3, 4, 6] ;
+% false.
+
+
+% ?- issorted([1,2,3,6,7]).
+% true
+
+% ?- issorted([1,2,6,3,7]).
+% false.
+
+

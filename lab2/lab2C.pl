@@ -89,3 +89,8 @@ eval_bool(Env, X1 == Y1, Res) :-
 update_env([(I,_)|Tail], I, Replacement, [(I, Replacement)|Tail]).
 update_env([H|T], I, Replacement, [H|T2]) :- update_env(T, I, Replacement, T2).
 update_env([], I, Replacement, [(I,Replacement)]).
+
+% Körexempel:
+%
+% ?- execute([(x,3)],seq(set(y,num(1)),while(id(x) > num(1),seq(set(y, id(y) * id(x)),set(x, id(x) - num(1))))), Env).
+% Env = [(x, 1),  (y, 6)] ;
